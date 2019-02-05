@@ -1,3 +1,6 @@
+import importlib
+import os
+
 from flask import Flask
 
 
@@ -10,6 +13,8 @@ def create_app():
 
 
 def _load_blueprints(app):
-    from .apps.test_app import test
-
-    app.register_blueprint(test)
+    folder_names =  os.listdir("dloader/apps/")
+    for name in folder_names:
+        if name.endswith("_app"):
+            tmp_blueprint = importlib.import_module(f".{name}", "dloader.apps")
+            app.register_blueprint(tmp_blueprint.blueprint)
